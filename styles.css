@@ -1,0 +1,85 @@
+/* Большинство стилей теперь используются из Bootstrap */
+
+/* Стили для задач */
+.todo-item {
+    transition: all 0.3s ease;
+}
+
+.todo-text {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+/* Используем Bootstrap классы для большинства стилей */
+.completed .todo-text {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+/* Стили для приоритетов - используем Bootstrap цвета */
+.priority-high {
+    border-left: 4px solid var(--bs-danger);
+}
+
+.priority-medium {
+    border-left: 4px solid var(--bs-warning);
+}
+
+.priority-low {
+    border-left: 4px solid var(--bs-info);
+}
+
+/* Стили для перетаскивания (jQuery UI) */
+.ui-sortable-helper {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: grabbing;
+}
+
+.ui-sortable-placeholder {
+    visibility: visible !important;
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px dashed var(--bs-primary);
+    box-sizing: border-box;
+}
+
+/* Стили для темной темы */
+body.dark-mode {
+    background-color: #212529;
+    color: #f8f9fa;
+}
+
+body.dark-mode .card {
+    background-color: #343a40;
+    border-color: #495057;
+}
+
+body.dark-mode .card-header {
+    background-color: #495057 !important;
+}
+
+body.dark-mode .list-group-item {
+    background-color: #343a40;
+    border-color: #495057;
+    color: #f8f9fa;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #495057;
+    border-color: #6c757d;
+    color: #f8f9fa;
+}
+
+/* Анимации с использованием jQuery UI */
+.highlight {
+    animation: highlight 1s ease;
+}
+
+@keyframes highlight {
+    0% {
+        background-color: rgba(var(--bs-primary-rgb), 0.3);
+    }
+    100% {
+        background-color: transparent;
+    }
+}

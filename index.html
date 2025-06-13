@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>To-Do Лист</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        />
+        <!-- jQuery UI для анимаций и интерактивности -->
+        <link
+            rel="stylesheet"
+            href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
+        />
+        <!-- Toastr для уведомлений -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="styles.css"
+        />
+    </head>
+    <body>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <!-- Используем карточку Bootstrap -->
+                    <div class="card shadow">
+                        <div
+                            class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+                        >
+                            <h3 class="mb-0">Мой To-Do Лист</h3>
+                            <div class="dropdown">
+                                <button
+                                    class="btn btn-sm btn-light dropdown-toggle"
+                                    type="button"
+                                    id="dropdownMenuButton"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <i class="bi bi-gear"></i>
+                                </button>
+                                <ul
+                                    class="dropdown-menu dropdown-menu-end"
+                                    aria-labelledby="dropdownMenuButton"
+                                >
+                                    <li>
+                                        <button
+                                            class="dropdown-item"
+                                            id="sort-alpha"
+                                        >
+                                            <i
+                                                class="bi bi-sort-alpha-down me-2"
+                                            ></i
+                                            >Сортировать по алфавиту
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            class="dropdown-item"
+                                            id="sort-priority"
+                                        >
+                                            <i
+                                                class="bi bi-sort-numeric-down me-2"
+                                            ></i
+                                            >Сортировать по приоритету
+                                        </button>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <button
+                                            class="dropdown-item"
+                                            id="toggle-theme"
+                                        >
+                                            <i class="bi bi-moon me-2"></i
+                                            >Темная тема
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Форма с валидацией Bootstrap -->
+                            <form
+                                id="todo-form"
+                                class="needs-validation"
+                                novalidate
+                            >
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"
+                                        ><i class="bi bi-pencil"></i
+                                    ></span>
+                                    <input
+                                        type="text"
+                                        id="todo-input"
+                                        class="form-control"
+                                        placeholder="Добавить новую задачу..."
+                                        required
+                                    />
+                                    <select
+                                        class="form-select"
+                                        id="priority-select"
+                                        style="max-width: 150px"
+                                    >
+                                        <option value="none">
+                                            Без приоритета
+                                        </option>
+                                        <option value="priority-low">
+                                            Низкий
+                                        </option>
+                                        <option value="priority-medium">
+                                            Средний
+                                        </option>
+                                        <option value="priority-high">
+                                            Высокий
+                                        </option>
+                                    </select>
+                                    <button
+                                        class="btn btn-primary"
+                                        type="submit"
+                                    >
+                                        <i class="bi bi-plus-lg me-1"></i
+                                        >Добавить
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Пожалуйста, введите текст задачи.
+                                </div>
+                            </form>
+
+                            <!-- Фильтры с использованием кнопок Bootstrap -->
+                            <div
+                                class="btn-group btn-group-sm w-100 mb-3"
+                                role="group"
+                            >
+                                <input
+                                    type="radio"
+                                    class="btn-check"
+                                    name="filter"
+                                    id="filter-all"
+                                    autocomplete="off"
+                                    checked
+                                />
+                                <label
+                                    class="btn btn-outline-primary"
+                                    for="filter-all"
+                                    >Все</label
+                                >
+
+                                <input
+                                    type="radio"
+                                    class="btn-check"
+                                    name="filter"
+                                    id="filter-active"
+                                    autocomplete="off"
+                                />
+                                <label
+                                    class="btn btn-outline-primary"
+                                    for="filter-active"
+                                    >Активные</label
+                                >
+
+                                <input
+                                    type="radio"
+                                    class="btn-check"
+                                    name="filter"
+                                    id="filter-completed"
+                                    autocomplete="off"
+                                />
+                                <label
+                                    class="btn btn-outline-primary"
+                                    for="filter-completed"
+                                    >Завершенные</label
+                                >
+                            </div>
+
+                            <div class="mt-3">
+                                <div
+                                    class="d-flex justify-content-between mb-3"
+                                >
+                                    <h5>
+                                        Список задач
+                                        <span
+                                            class="badge bg-primary"
+                                            id="tasks-counter"
+                                            >0</span
+                                        >
+                                    </h5>
+                                    <div>
+                                        <button
+                                            id="clear-completed"
+                                            class="btn btn-sm btn-outline-secondary"
+                                        >
+                                            <i class="bi bi-check2-all me-1"></i
+                                            >Очистить завершенные
+                                        </button>
+                                        <button
+                                            id="clear-all"
+                                            class="btn btn-sm btn-outline-danger ms-2"
+                                        >
+                                            <i class="bi bi-trash me-1"></i
+                                            >Очистить все
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Список задач с использованием компонентов Bootstrap -->
+                                <ul
+                                    id="todo-list"
+                                    class="list-group"
+                                >
+                                    <!-- Задачи будут добавляться здесь динамически -->
+                                </ul>
+
+                                <!-- Прогресс-бар Bootstrap -->
+                                <div
+                                    class="progress mt-3"
+                                    style="height: 5px"
+                                >
+                                    <div
+                                        id="progress-bar"
+                                        class="progress-bar"
+                                        role="progressbar"
+                                        style="width: 0%"
+                                    ></div>
+                                </div>
+
+                                <div
+                                    class="mt-2 text-muted d-flex justify-content-between"
+                                >
+                                    <small
+                                        >Завершено:
+                                        <span id="completed-counter">0</span> из
+                                        <span id="total-counter">0</span></small
+                                    >
+                                    <small
+                                        >Последнее обновление:
+                                        <span id="last-update"
+                                            >Никогда</span
+                                        ></small
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно для редактирования задачи -->
+        <div
+            class="modal fade"
+            id="editTaskModal"
+            tabindex="-1"
+            aria-labelledby="editTaskModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5
+                            class="modal-title"
+                            id="editTaskModalLabel"
+                        >
+                            Редактировать задачу
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit-form">
+                            <div class="mb-3">
+                                <label
+                                    for="edit-task-text"
+                                    class="form-label"
+                                    >Текст задачи</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="edit-task-text"
+                                    required
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label
+                                    for="edit-priority"
+                                    class="form-label"
+                                    >Приоритет</label
+                                >
+                                <select
+                                    class="form-select"
+                                    id="edit-priority"
+                                >
+                                    <option value="none">Без приоритета</option>
+                                    <option value="priority-low">Низкий</option>
+                                    <option value="priority-medium">
+                                        Средний
+                                    </option>
+                                    <option value="priority-high">
+                                        Высокий
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label
+                                    for="edit-due-date"
+                                    class="form-label"
+                                    >Срок выполнения</label
+                                >
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="edit-due-date"
+                                />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Отмена
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="save-edit"
+                        >
+                            Сохранить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Подключение скриптов -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>
+
