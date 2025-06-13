@@ -2,7 +2,7 @@
 
 Современное веб-приложение для управления задачами, созданное с использованием jQuery и Bootstrap.
 
-![To-Do List Preview](https://via.placeholder.com/800x400?text=To-Do+List+Preview)
+![To-Do List Preview](preview.png)
 
 ## Возможности
 
